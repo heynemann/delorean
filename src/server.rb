@@ -17,6 +17,16 @@ class Server < Sinatra::Base
     haml :catalogue_list
   end
 
+  get '/catalogues/new' do
+    haml :catalogue_new
+  end
+
+  post '/catalogues/create' do
+    name = params[:name]
+    settings.db.create_catalogue(name)
+    redirect '/catalogues'
+  end
+
   get '/stylesheets/style.css' do
     sass :style
   end

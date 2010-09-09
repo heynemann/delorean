@@ -31,4 +31,10 @@ describe 'Delorean Server' do
     last_response.body.include?("Suggestions")
   end
 
+  it "should show the new catalogue page" do
+    get '/catalogues/new'
+    last_response.should be_ok
+    last_response.body.include?('Name')
+  end
+
 end
