@@ -13,8 +13,42 @@ end
 describe Message do
   
   it "should create a new message" do
-    msg = Message.new
+    msg = Message.new :type => :create, :message => { :name => "test" }
     msg
+    
+    msg.type.should == :create
+    msg.message[:name].should == "test"
   end
   
+end
+
+describe FileSystemMessage do
+  it "should create a new message" do
+    msg = FileSystemMessage.new :type => :create, :message => { :name => "test" }
+    msg
+    
+    msg.type.should == :create
+    msg.message[:name].should == "test"
+  end
+end
+
+describe MessageLoader do
+  before(:each) do
+    @loader = MessageLoader.new
+  end
+
+
+  it "should initialize with a messages array empty" do
+    @loader.messages.should == []
+  end
+
+  it "should load a file with proper messages" do
+    @loader.load('proper_messages_1.txt')
+
+    @loader.messages.count.should == 1
+    @loader.messages[0].class.should == FileSystemMessage
+    @loader.messages[0].type.should == "Create"
+    @loader.messages[0].id.should == "/test/1"
+    @loader.messages[0].message.should == "some random message"
+  end
 end
