@@ -1,6 +1,9 @@
 %h1.catalogues
-    Catalogues
+  Catalogues
 
 - for catalogue in @catalogues.keys 
-    - @catalogue = catalogue
-    %h2.catalogue= catalogue
+  - @catalogue = catalogue
+  %h2.catalogue= catalogue
+
+%div.grid_12
+  %a.operation{:href=>'/catalogues/new'} Add new catalogue

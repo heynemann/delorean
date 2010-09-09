@@ -1,10 +1,11 @@
-require 'db'
-
 require 'sinatra/base'
+
+require 'db'
 
 class Server < Sinatra::Base
   set :sessions, true
   set :public, File.dirname(__FILE__) + '/public'
+  set :views, File.dirname(__FILE__) + '/views'
   set :db, Db.new
 
   get '/about' do
