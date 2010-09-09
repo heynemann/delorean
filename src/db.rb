@@ -1,9 +1,9 @@
 require "json"
 
 class Db
-  attr_reader :values
+  attr_reader :catalogues
   def initialize
-    @values = {}
+    @catalogues = {}
   end
 end
 
@@ -45,4 +45,13 @@ end
 
 class FileSystemMessage < Message
 
+end
+
+class NewCatalogueMessage < FileSystemMessage
+  attr_reader :operation_type
+  def initialize(arguments)
+    @type = :create
+    @operation_type = :catalogue
+    @message = arguments[:message]
+  end
 end

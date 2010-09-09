@@ -1,11 +1,13 @@
 #!/usr/bin/env ruby -w
 require "rubygems" 
 require "simpleconsole" 
+require "sinatra"
+require "server"
 # require File.dirname(__FILE__) + "/../" 
 
 class Controller < SimpleConsole::Controller
   def default
-    load "server"
+    Server.run!
   end
 end
 

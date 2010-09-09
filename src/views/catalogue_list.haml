@@ -1,0 +1,11 @@
+%html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang" => "en", :lang => "en"}
+
+%h1.logo
+    Delorean Database - v0.1.0 - 2010
+
+%h2.catalogues
+    Catalogues
+
+- for catalogue in @catalogues.keys 
+    - @catalogue = catalogue
+    %h3.catalogue= catalogue

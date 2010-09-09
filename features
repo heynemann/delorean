@@ -1,0 +1,6 @@
+Allow GET of all catalogues
+Allow PUT of a new catalogue
+Allow GET of all resources of a given sub-id
+Allow GET of a resource by id
+Allow POST or PUT of a resource
+Allow DELETE of a resource
