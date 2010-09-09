@@ -1,0 +1,14 @@
+%html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang" => "en", :lang => "en"}
+
+%head
+    %title Delorean Database
+    %link{:rel=>'stylesheet', :href=>'/stylesheets/style.css', :type => "text/css"}       
+%body
+    #wrap
+        #header
+            %h1.logo
+                Delorean Database
+        #content
+            = yield
+        #footer
+            Delorean Database - v0.1.0 - 2010

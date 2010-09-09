@@ -10,4 +10,9 @@ class Server < Sinatra::Base
     @catalogues = settings.db.catalogues
     haml :catalogue_list
   end
+
+  get '/stylesheets/style.css' do
+    sass :style
+  end
+
 end
