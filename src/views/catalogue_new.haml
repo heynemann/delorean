@@ -1,7 +1,16 @@
-%form{:action=>'create', :method=>'post'}
-  .name-field
-    %label{:for=>'name'}
-      Name
-    %input#name{:type=>'text', :name=>'name'}
-  .submit
-    %input.submit{:type=>'submit', :value=>'Create'}
+%h1
+  Create a new catalogue
+%div.info
+  %p
+    Catalogues are the cornerstone of Delorean. They aggregate your documents and messages and are an integral part of the uri's that identify your documents.
+  %p
+    The catalogue name is unique and can't be changed afterwards.
+
+.form
+  %form{:action=>'create', :method=>'post'}
+    .name-field
+      %label{:for=>'name'}
+        Name
+      %input#name{:type=>'text', :name=>'name'}
+    .submit
+      %input.submit{:type=>'submit', :value=>'Create'}
