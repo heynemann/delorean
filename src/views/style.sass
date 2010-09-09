@@ -6,13 +6,17 @@ $lightgreen: #B1AF40
 $white: #FFFFFF
 
 body 
-  :background-color $white
+  :background url('/img/background-top.png') repeat-x scroll 0 0 
+    :color $white
   :font
     :family arial
     :size 100%
     :line-height 1.25
   
   :color $darkgreen
+
+#header
+  :margin 0px 0px
 
 h1
   :font
@@ -27,7 +31,15 @@ h3
     :size 1.16667em
 
 #menu
-  :margin-top 12px
+  :margin-top 10px
+
+#content
+  :background url('/img/background-white.png') no-repeat scroll 0 0 
+  :width 972px
+
+#main
+  :margin-left 15px
+  :width 935px
 
 a
   :text-decoration none

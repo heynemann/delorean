@@ -2,7 +2,7 @@
  & Columns : 12 
  & Gutter %: 20% 
  & MinWidth: 960px
- & MaxWidth: 1200px
+ & MaxWidth: 960px
  */
 .grid_1 { width: 6.6666666666667%; }
 .grid_2 { width: 15%; }
@@ -40,7 +40,7 @@
 
 .container{
 	min-width: 960px; 
-	max-width: 1200px; 
+	max-width: 960px; 
 	margin: auto;
 }
 
