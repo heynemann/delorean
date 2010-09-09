@@ -1,1 +1,1 @@
-{"type":"Create", "id":"Test", "name":"Bernardo1"}
+{"type":"Create", "id":"/test/1", "name":"Bernardo1"}

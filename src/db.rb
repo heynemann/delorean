@@ -14,14 +14,20 @@ class MessageLoader
   end
   
   def load_all(folder)
-    
+    entries = Dir.new(folder).entries
+    entries.sort.each do |entry|
+      path = File.join(folder, entry)
+      next if ['.', '..'].include?(entry)
+      next unless File.exists? path
+      load(path)
+    end
   end
 
   def load(file)
     File.open(file, 'r') do |message_file|  
       while line = message_file.gets
         contents = JSON.parse(line)
-        msg = FileSystemMessage.new :type => contents["type"], :message => nil
+        msg = FileSystemMessage.new :type => contents["type"], :message => contents
         @messages << msg
       end
     end
