@@ -1,14 +1,19 @@
 %html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang" => "en", :lang => "en"}
 
 %head
-    %title Delorean Database
-    %link{:rel=>'stylesheet', :href=>'/stylesheets/style.css', :type => "text/css"}       
+  %title Delorean Database
+  %link{:rel=>'stylesheet', :href=>'/css/grid.css', :type => "text/css"}       
+  %link{:rel=>'stylesheet', :href=>'/stylesheets/style.css', :type => "text/css"}       
 %body
-    #wrap
-        #header
-            %h1.logo
-                Delorean Database
-        #content
-            = yield
-        #footer
-            Delorean Database - v0.1.0 - 2010
+  #wrap
+    .grid_12#header
+      %img.logo{:src=>'/img/delorean-logo.png'}
+    .grid_12
+      #menu
+        %a.menu-item{:href=>'/catalogues'} Catalogues
+        %a.menu-item{:href=>'/about'} About Delorean
+    .grid_12
+      #content
+        = yield
+    .grid_12#footer
+      Delorean Database - v0.1.0 - 2010
