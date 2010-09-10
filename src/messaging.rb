@@ -1,12 +1,15 @@
 require "json"
 
 class MessageSet
-  attr_reader :messages, :catalogues
+  attr_reader :messages, :catalogues, :dirty_messages
   def initialize(loader=FileSystemLoader)
     @loader = loader.new(self)
     @messages = []
     @catalogues = {}
     @dirty_messages = []
+  end
+  def is_dirty?
+    @dirty_messages.count > 0
   end
   def load(file)
     @loader.load(file)
@@ -17,6 +20,17 @@ class MessageSet
   def post(message)
     message.process @catalogues
     @dirty_messages << message
+  end
+  def persist!(filename=nil)
+    if not filename
+      filename = "messages_for_#{Date.today.to_s}.txt"
+    end
+
+    open(filename, 'a') { |f|
+      @dirty_messages.each { |message|
+        f.puts message.to_message.to_json
+      }
+    }
   end
 end
 
@@ -56,7 +70,7 @@ class FileSystemLoader < Loader
   end
 
   def load(file)
-    File.open(file, 'r') do |message_file|  
+    File.open(file, 'r') do |message_file|
       while line = message_file.gets
         contents = JSON.parse(line)
         msg = match_for contents
@@ -91,19 +105,29 @@ class MessageEnabledURIOperationMessage < URIOperationMessage
   def initialize(message_type, operation_type, message, arguments)
     super(message_type, operation_type, arguments)
     @message = message
-  end  
+  end
 end
 
 class CreateCatalogueMessage < MessageEnabledURIOperationMessage
+  attr_reader :name
   def initialize(arguments)
     @name = arguments["name"]
     message = { "name" => arguments["name"] }
     arguments["uri"] = '/catalogues/:new'
     super("create", "catalogue", message, arguments)
   end
-  
+
   def process(catalogues)
     catalogues[@name] = @message
+  end
+
+  def to_message
+    {
+      "type" => @type,
+      "operation" => @operation,
+      "uri" => @uri,
+      "document" => @message
+    }
   end
 end
 
@@ -112,10 +136,25 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
     message = arguments["document"]
     super("create", "document", message, arguments)
   end
+
+  def process(catalogues)
+    nil
+  end
+
+  def to_message
+
+  end
 end
 
 class DeleteDocumentMessage < URIOperationMessage
   def initialize(arguments)
     super("delete", "document", arguments)
+  end
+
+  def process(catalogues)
+    nil
+  end
+  def to_message
+
   end
 end

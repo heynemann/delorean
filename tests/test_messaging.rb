@@ -1,19 +1,20 @@
 $LOAD_PATH << '../src'
 
+require 'ftools'
 require 'messaging'
 
 describe CreateCatalogueMessage do
   before(:each) do
     @set = MessageSet.new
   end
-  
+
   it "should process the message to include itself to the catalogues list" do
     message = CreateCatalogueMessage.new "uri"=>"/:new", "name" => "my_catalogue"
     message.process @set.catalogues
-    
+
     @set.catalogues["my_catalogue"].should == { "name"=>"my_catalogue" }
   end
-  
+
 end
 
 describe MessageSet do
@@ -44,30 +45,53 @@ describe MessageSet do
     @set.messages[1].message.should == {"name" => "Bernardo2"}
     @set.messages[1].uri.should == "/test/2"
   end
-  
+
   it "should serialize and deserialize messages to proper files" do
-    @set.messages << CreateCatalogueMessage.new("name" => "my_catalogue")
-    @set.messages << CreateDocumentMessage.new("uri" => "/my_catalogue/user/:new", 
+    @set.post CreateCatalogueMessage.new("name" => "my_catalogue")
+    @set.post CreateDocumentMessage.new("uri" => "/my_catalogue/user/:new",
                                                "document" => {"name" => "Bernardo"})
-    @set.messages << DeleteDocumentMessage.new("uri" => "/my_catalogue/user/1")
+    @set.post DeleteDocumentMessage.new("uri" => "/my_catalogue/user/1")
 
     @set.is_dirty?.should == true
     @set.dirty_messages.count.should == 3
 
-    @set.persist!('serialize_deserialize_test.txt')
+    @set.persist!('/tmp/serialize_deserialize_test.txt')
 
     new_set = MessageSet.new
-    new_set.load('serialize_deserialize_test.txt')
+    new_set.load('/tmp/serialize_deserialize_test.txt')
 
     new_set.messages.count.should == 3
     new_set.is_dirty?.should == false
     new_set.dirty_messages.count.should == 0
-
   end
-  
+
   it "should post a message and add it to dirty messages" do
     @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
-    
+
     @set.catalogues.keys.should == ["my_catalogue"]
+  end
+
+  it "should check if the set is dirty" do
+    @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
+
+    @set.is_dirty?.should == true
+  end
+
+  it "should persist the messages" do
+    tmp_file = "/tmp/persist_test.txt"
+
+    File.delete(tmp_file) if File.exists? tmp_file
+
+    @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
+
+    @set.persist! tmp_file
+
+    new_set = MessageSet.new
+    new_set.load tmp_file
+
+    new_set.messages.count.should == 1
+    new_set.messages[0].class == CreateCatalogueMessage
+    new_set.messages[0].name == "my_catalogue"
+    new_set.messages[0].uri == "/my_catalogue"
   end
 end
