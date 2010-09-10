@@ -2,6 +2,20 @@ $LOAD_PATH << '../src'
 
 require 'messaging'
 
+describe CreateCatalogueMessage do
+  before(:each) do
+    @set = MessageSet.new
+  end
+  
+  it "should process the message to include itself to the catalogues list" do
+    message = CreateCatalogueMessage.new "uri"=>"/:new", "name" => "my_catalogue"
+    message.process @set.catalogues
+    
+    @set.catalogues["my_catalogue"].should == { "name"=>"my_catalogue" }
+  end
+  
+end
+
 describe MessageSet do
   before(:each) do
     @set = MessageSet.new
@@ -49,5 +63,11 @@ describe MessageSet do
     new_set.is_dirty?.should == false
     new_set.dirty_messages.count.should == 0
 
+  end
+  
+  it "should post a message and add it to dirty messages" do
+    @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
+    
+    @set.catalogues.keys.should == ["my_catalogue"]
   end
 end

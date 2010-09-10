@@ -1,16 +1,22 @@
 require "json"
 
 class MessageSet
-  attr_reader :messages
+  attr_reader :messages, :catalogues
   def initialize(loader=FileSystemLoader)
     @loader = loader.new(self)
     @messages = []
+    @catalogues = {}
+    @dirty_messages = []
   end
   def load(file)
     @loader.load(file)
   end
   def load_all(folder)
     @loader.load_all(folder)
+  end
+  def post(message)
+    message.process @catalogues
+    @dirty_messages << message
   end
 end
 
@@ -90,8 +96,14 @@ end
 
 class CreateCatalogueMessage < MessageEnabledURIOperationMessage
   def initialize(arguments)
+    @name = arguments["name"]
     message = { "name" => arguments["name"] }
+    arguments["uri"] = '/catalogues/:new'
     super("create", "catalogue", message, arguments)
+  end
+  
+  def process(catalogues)
+    catalogues[@name] = @message
   end
 end
 
