@@ -2,15 +2,43 @@ require "json"
 
 class MessageSet
   attr_reader :messages
-  def initialize
+  def initialize(loader=FileSystemLoader)
+    @loader = loader.new(self)
+    @messages = []
+  end
+  def load(file)
+    @loader.load(file)
+  end
+  def load_all(folder)
+    @loader.load_all(folder)
+  end
+end
+
+class Loader
+  def initialize(message_set)
+    @message_set = message_set
     @message_types = {
       "create_catalogue" => CreateCatalogueMessage,
       "create_document" => CreateDocumentMessage,
       "delete_document" => DeleteDocumentMessage
     }
-    @messages = []
   end
-  
+
+  def load_all(folder)
+    nil
+  end
+
+  def load(file)
+    nil
+  end
+
+  def match_for(contents)
+    nil
+  end
+
+end
+
+class FileSystemLoader < Loader
   def load_all(folder)
     entries = Dir.new(folder).entries
     entries.sort.each do |entry|
@@ -26,7 +54,7 @@ class MessageSet
       while line = message_file.gets
         contents = JSON.parse(line)
         msg = match_for contents
-        @messages << msg
+        @message_set.messages << msg
       end
     end
   end
