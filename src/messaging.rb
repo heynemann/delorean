@@ -1,4 +1,5 @@
 require "json"
+require "date"
 
 class MessageSet
   attr_reader :messages, :catalogues, :dirty_messages
@@ -12,17 +13,17 @@ class MessageSet
     @dirty_messages.count > 0
   end
   def load(file)
-    @loader.load(file)
+    @loader.load(file, @catalogues)
   end
   def load_all(folder)
-    @loader.load_all(folder)
+    @loader.load_all(folder, @catalogues)
   end
   def post(message)
     message.process @catalogues
     @dirty_messages << message
   end
-  def persist!(filename=nil)
-    @loader.persist! filename, @dirty_messages
+  def persist!(folder, filename=nil)
+    @loader.persist! folder, filename, @dirty_messages
     @dirty_messages.each { |message|
       @messages << message
     }
@@ -40,7 +41,7 @@ class Loader
     }
   end
 
-  def load_all(folder)
+  def load_all(folder, catalogues)
     nil
   end
 
@@ -52,28 +53,29 @@ class Loader
     nil
   end
 
-  def persist!(filename)
+  def persist!(folder, filename)
     nil
   end
 
 end
 
 class FileSystemLoader < Loader
-  def load_all(folder)
+  def load_all(folder, catalogues)
     entries = Dir.new(folder).entries
     entries.sort.each do |entry|
       path = File.join(folder, entry)
       next if ['.', '..'].include?(entry)
       next unless File.exists? path
-      load(path)
+      load(path, catalogues)
     end
   end
 
-  def load(file)
+  def load(file, catalogues)
     File.open(file, 'r') do |message_file|
       while line = message_file.gets
         contents = JSON.parse(line)
         msg = match_for contents
+        msg.process catalogues
         @message_set.messages << msg
       end
     end
@@ -92,12 +94,12 @@ class FileSystemLoader < Loader
     message_type.new(contents)
   end
 
-  def persist!(filename, messages)
+  def persist!(folder, filename, messages)
     if not filename
       filename = "messages_for_#{Date.today.to_s}.txt"
     end
 
-    open(filename, 'a') { |f|
+    open(File.join(folder, filename), 'a') { |f|
       messages.each { |message|
         f.puts message.to_message.to_json
       }
@@ -128,14 +130,14 @@ end
 class CreateCatalogueMessage < MessageEnabledURIOperationMessage
   attr_reader :name
   def initialize(arguments)
-    @name = arguments["name"]
-    message = { "name" => arguments["name"] }
-    arguments["uri"] = '/catalogues/:new'
+    @name = arguments["document"]["name"]
+    message = { "name" => @name }
+    arguments["uri"] = "/#{@name}"
     super("create", "catalogue", message, arguments)
   end
 
   def process(catalogues)
-    catalogues[@name] = @message
+    catalogues[@name] = @name
   end
 
   def to_message

@@ -47,9 +47,11 @@ describe MessageSet do
   end
 
   it "should serialize and deserialize messages to proper files" do
-    tmp_file = '/tmp/serialize_deserialize_test.txt'
+    dir = "/tmp"
+    tmp_file = 'serialize_deserialize_test.txt'
+    tmp_file_path = File.join(dir, tmp_file)
 
-    File.delete(tmp_file) if File.exists? tmp_file
+    File.delete(tmp_file_path) if File.exists? tmp_file_path
 
     @set.post CreateCatalogueMessage.new("name" => "my_catalogue")
     @set.post CreateDocumentMessage.new("uri" => "/my_catalogue/user/:new",
@@ -59,10 +61,10 @@ describe MessageSet do
     @set.is_dirty?.should == true
     @set.dirty_messages.count.should == 3
 
-    @set.persist! tmp_file
+    @set.persist! dir, tmp_file
 
     new_set = MessageSet.new
-    new_set.load tmp_file
+    new_set.load tmp_file_path
 
     new_set.messages.count.should == 3
     new_set.is_dirty?.should == false
@@ -82,18 +84,20 @@ describe MessageSet do
   end
 
   it "should persist the messages" do
-    tmp_file = "/tmp/persist_test.txt"
+    dir = "/tmp"
+    tmp_file = "persist_test.txt"
+    tmp_file_path = File.join(dir, tmp_file)
 
-    File.delete(tmp_file) if File.exists? tmp_file
+    File.delete(tmp_file_path) if File.exists? tmp_file_path
 
     @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
 
-    @set.persist! tmp_file
+    @set.persist! dir, tmp_file
 
-    File.exists?(tmp_file).should == true
+    File.exists?(tmp_file_path).should == true
 
     new_set = MessageSet.new
-    new_set.load tmp_file
+    new_set.load tmp_file_path
 
     new_set.messages.count.should == 1
     new_set.messages[0].class == CreateCatalogueMessage
