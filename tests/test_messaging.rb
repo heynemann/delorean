@@ -47,18 +47,22 @@ describe MessageSet do
   end
 
   it "should serialize and deserialize messages to proper files" do
+    tmp_file = '/tmp/serialize_deserialize_test.txt'
+
+    File.delete(tmp_file) if File.exists? tmp_file
+
     @set.post CreateCatalogueMessage.new("name" => "my_catalogue")
     @set.post CreateDocumentMessage.new("uri" => "/my_catalogue/user/:new",
-                                               "document" => {"name" => "Bernardo"})
+                                        "document" => {"name" => "Bernardo"})
     @set.post DeleteDocumentMessage.new("uri" => "/my_catalogue/user/1")
 
     @set.is_dirty?.should == true
     @set.dirty_messages.count.should == 3
 
-    @set.persist!('/tmp/serialize_deserialize_test.txt')
+    @set.persist! tmp_file
 
     new_set = MessageSet.new
-    new_set.load('/tmp/serialize_deserialize_test.txt')
+    new_set.load tmp_file
 
     new_set.messages.count.should == 3
     new_set.is_dirty?.should == false

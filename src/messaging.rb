@@ -84,6 +84,11 @@ class FileSystemLoader < Loader
     operation = contents["operation"]
 
     message_type = @message_types["#{type}_#{operation}"]
+
+    if not message_type
+      raise "Message Type with type #{type} and operation type #{operation} not found!"
+    end
+
     message_type.new(contents)
   end
 
@@ -154,7 +159,12 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
   end
 
   def to_message
-
+    {
+      "type" => @type,
+      "operation" => @operation,
+      "uri" => @uri,
+      "document" => @message
+    }
   end
 end
 
@@ -167,6 +177,10 @@ class DeleteDocumentMessage < URIOperationMessage
     nil
   end
   def to_message
-
+    {
+      "type" => @type,
+      "operation" => @operation,
+      "uri" => @uri
+    }
   end
 end
