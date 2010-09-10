@@ -1,1 +1,1 @@
-{"type":"Create", "id":"/test/2", "name":"Bernardo2"}
+{"type":"create", "operation":"document", "uri":"/test/2", "document": {"name":"Bernardo2"}}

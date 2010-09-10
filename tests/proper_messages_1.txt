@@ -1,1 +1,1 @@
-{"type":"Create", "id":"/test/1", "name":"some random message"}
+{"type":"create", "operation":"document", "uri":"/test/:new", "document": {"name":"some random message"}}
