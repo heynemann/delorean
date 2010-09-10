@@ -22,15 +22,11 @@ class MessageSet
     @dirty_messages << message
   end
   def persist!(filename=nil)
-    if not filename
-      filename = "messages_for_#{Date.today.to_s}.txt"
-    end
-
-    open(filename, 'a') { |f|
-      @dirty_messages.each { |message|
-        f.puts message.to_message.to_json
-      }
+    @loader.persist! filename, @dirty_messages
+    @dirty_messages.each { |message|
+      @messages << message
     }
+    @dirty_messages.clear
   end
 end
 
@@ -53,6 +49,10 @@ class Loader
   end
 
   def match_for(contents)
+    nil
+  end
+
+  def persist!(filename)
     nil
   end
 
@@ -85,6 +85,18 @@ class FileSystemLoader < Loader
 
     message_type = @message_types["#{type}_#{operation}"]
     message_type.new(contents)
+  end
+
+  def persist!(filename, messages)
+    if not filename
+      filename = "messages_for_#{Date.today.to_s}.txt"
+    end
+
+    open(filename, 'a') { |f|
+      messages.each { |message|
+        f.puts message.to_message.to_json
+      }
+    }
   end
 end
 

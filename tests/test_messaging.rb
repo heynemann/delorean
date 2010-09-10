@@ -86,6 +86,8 @@ describe MessageSet do
 
     @set.persist! tmp_file
 
+    File.exists?(tmp_file).should == true
+
     new_set = MessageSet.new
     new_set.load tmp_file
 
