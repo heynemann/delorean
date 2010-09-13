@@ -13,7 +13,7 @@ class Server < Sinatra::Base
   end
 
   get '/catalogues' do
-    @catalogues = settings.db.catalogues
+    params['catalogues'] = settings.db.catalogues
     haml :catalogue_list
   end
 
@@ -29,6 +29,10 @@ class Server < Sinatra::Base
 
   get '/stylesheets/style.css' do
     sass :style
+  end
+
+  get '/:name' do
+    haml :catalogue_show
   end
 
 end

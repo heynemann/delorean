@@ -7,14 +7,14 @@ $verylightgreen: #e8ffdd
 $white: #FFFFFF
 $darkgray: #666666
 
-body 
-  :background url('/img/background-top.png') repeat-x scroll 0 0 
+body
+  :background url('/img/background-top.png') repeat-x scroll 0 0
     :color $white
   :font
     :family arial
     :size 100%
     :line-height 1.25
-  
+
   :color $darkgreen
 
 #header
@@ -33,14 +33,16 @@ h3
     :size 1.16667em
 
 #menu
-  :margin-top 10px
+  :margin
+    :top 10px
 
 #content
-  :background url('/img/background-white.png') no-repeat scroll 0 0 
+  :background url('/img/background-white.png') no-repeat scroll 0 0
   :width 972px
 
 #main
-  :margin-left 15px
+  :margin
+    :left 15px
   :width 935px
 
 a
@@ -55,7 +57,8 @@ a.menu-item
     :left 5px
     :right 5px
   &:hover
-    :border-left solid 1px $red
+    :border
+      :left solid 1px $red
 
 #footer
   :text-align center
@@ -66,7 +69,8 @@ div.info
   :border solid 1px $lightgreen
   :color $darkgray
   :padding 0px 6px 0px 6px
-  :text-align justify
+  :text
+    :align justify
   :margin 0px 120px 0px 120px
   :background
     :color $verylightgreen
@@ -75,4 +79,5 @@ div.form
   :margin 20px 120px 0px 120px
 
 div.submit
-  :text-align center
+  :text
+    :align center

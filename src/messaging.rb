@@ -1,6 +1,8 @@
 require "json"
 require "date"
 
+require "domain"
+
 class MessageSet
   attr_reader :messages, :catalogues, :dirty_messages
   def initialize(loader=FileSystemLoader)
@@ -137,7 +139,7 @@ class CreateCatalogueMessage < MessageEnabledURIOperationMessage
   end
 
   def process(catalogues)
-    catalogues[@name] = @name
+    catalogues[@name] = Catalogue.new @name
   end
 
   def to_message
