@@ -1,3 +1,23 @@
-%p= params["name"]
-%p
-  dá pra ver catálogos!!!
+%h1= params["name"]
+%div.grid_4
+  %h2.statistics
+    Statistics
+  %div.statistics
+    %p.info
+      Number of documents: 250
+    %p.info
+      Last message: 10/10/2010 10:10:10
+%div.grid_8
+  %h2.statistics
+    Last Documents
+  %div.last-documents
+    %pre
+      :preserve
+        /asdfg @ 10/10/2010 10:10:10
+          {
+            type: "catalogue",
+            operation: "create",
+            message: {
+              name: "asdfg"
+            }
+          }
