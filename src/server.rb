@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env ruby
+
 require 'sinatra/base'
 
 require 'db'
@@ -7,6 +10,10 @@ class Server < Sinatra::Base
   set :public, File.dirname(__FILE__) + '/public'
   set :views, File.dirname(__FILE__) + '/views'
   set :db, Db.new
+
+  before do
+    content_type 'text/html', :charset => 'utf-8'
+  end
 
   get '/about' do
     haml :about
@@ -28,6 +35,7 @@ class Server < Sinatra::Base
   end
 
   get '/stylesheets/style.css' do
+    content_type 'text/css', :charset => 'utf-8'
     sass :style
   end
 
