@@ -83,14 +83,14 @@ class FileSystemLoader < Loader
     File.open(file, 'r') do |message_file|
       while line = message_file.gets
         contents = JSON.parse(line)
-        msg = match_for contents
+        msg = match_for contents, catalogues
         msg.process catalogues
         @message_set.messages << msg
       end
     end
   end
 
-  def match_for(contents)
+  def match_for(contents, catalogues)
     type = contents["type"]
     operation = contents["operation"]
 
@@ -98,6 +98,10 @@ class FileSystemLoader < Loader
 
     if not message_type
       raise "Message Type with type #{type} and operation type #{operation} not found!"
+    end
+
+    if message_type != CreateCatalogueMessage
+      contents["catalogues"] = catalogues
     end
 
     message_type.new(contents, contents["timestamp"])
@@ -118,7 +122,7 @@ end
 class Message
   attr_reader :timestamp
   def initialize(timestamp=nil)
-    @timestamp = timestamp or Time.now
+    @timestamp ||= Time.now
   end
 end
 
@@ -170,15 +174,22 @@ end
 #Creates documents
 class CreateDocumentMessage < MessageEnabledURIOperationMessage
   def initialize(arguments, timestamp=nil)
+    @catalogue_name = arguments["catalogue_name"]
     super("create", "document", arguments["document"], arguments, timestamp)
   end
 
   def process(catalogues)
-    nil
+    catalogue = catalogues[@catalogue_name]
+    if not catalogue
+      raise "Catalogue with name #{@catalogue_name} not found!"
+    end
+    document = Document.new(@uri, @timestamp, @message)
+    catalogue.documents << document
   end
 
   def to_message
     {
+      "catalogue_name" => @catalogue_name,
       "timestamp" => @timestamp,
       "type" => @type,
       "operation" => @operation,

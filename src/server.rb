@@ -39,6 +39,14 @@ class Server < Sinatra::Base
     sass :style
   end
 
+  post '/:name/new' do
+    catalogue = settings.db.catalogues[params[:name]]
+
+    message = JSON.parse params[:message]
+    settings.db.create_message(catalogue, message)
+    redirect "/#{params[:name]}"
+  end
+
   get '/:name' do
     params['catalogue'] = settings.db.catalogues[params[:name]]
     haml :catalogue_show

@@ -17,13 +17,17 @@
     %div.no-documents
       No documents found!
   - else
-    %pre
-      :preserve
-        /asdfg @ 10/10/2010 10:10:10
-          {
-            type: "catalogue",
-            operation: "create",
-            message: {
-              name: "asdfg"
-            }
-          }
+    - params["catalogue"].documents.each do |document|
+      %h4= document.uri + " @ " + document.timestamp.to_s
+      %pre
+        %preserve
+          = document.body.to_json.to_s
+
+  %h2.new-document
+    New Document
+  %form.new-document{:action=>"/#{params['name']}/new", :method=>"POST"}
+    %fieldset
+      %label.new-document{:for => "message"} JSON:
+      %textarea.new-document{:type => "text", :name => "message", :class => "text"}
+    .enviar
+      %input{:type => "submit", :value => "Send", :class => "button"}

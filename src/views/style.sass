@@ -7,6 +7,11 @@ $verylightgreen: #e8ffdd
 $white: #FFFFFF
 $darkgray: #666666
 
+=border-radius(!radius)
+  border-radius = !radius
+  -moz-border-radius = !radius
+  -webkit-border-radius = !radius
+
 body
   :background url('/img/background-top.png') repeat-x scroll 0 0
     :color $white
@@ -81,3 +86,34 @@ div.form
 div.submit
   :text
     :align center
+
+form.new-document fieldset
+  :border 0px
+  :padding 0px 0px 0px 35px
+
+div.enviar
+  :padding 10px 0px
+  :text
+    :align right
+
+label.new-document
+  :float left
+  :padding 0px 20px 0px 0px
+
+textarea.new-document
+  :float left
+  :height 150px
+  :width 500px
+
+div.enviar
+  :padding-right 4px
+
+div.enviar input
+  +border-radius("8px")
+  :width 70px
+  :height 25px
+  :border
+    :width 1px
+  :background
+    :color $darkgreen
+  :color $white

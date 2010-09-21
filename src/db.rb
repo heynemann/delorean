@@ -1,4 +1,5 @@
 require 'messaging'
+require 'Time'
 
 #class that represents the Database.
 class Db
@@ -20,6 +21,18 @@ class Db
 
   def create_catalogue(name)
     message = CreateCatalogueMessage.new "document" => {"name" => name}
+    @message_set.post message
+    persist!
+  end
+
+  def create_message(catalogue, message)
+    document_index = catalogue.documents.count
+    uri = "/#{catalogue.name}/#{document_index}"
+    arguments = { "document" => message,
+                  "catalogue_name" => catalogue.name,
+                  "uri" => uri
+                }
+    message = CreateDocumentMessage.new arguments, Time.now
     @message_set.post message
     persist!
   end

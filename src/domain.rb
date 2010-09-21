@@ -15,3 +15,12 @@ class Catalogue
     return @documents.last.timestamp
   end
 end
+
+class Document
+  attr_reader :uri, :timestamp, :body
+  def initialize(uri, timestamp, body)
+    @uri = uri
+    @timestamp = timestamp
+    @body = body
+  end
+end
