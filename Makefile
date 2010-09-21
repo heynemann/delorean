@@ -2,4 +2,4 @@ run:
 	@cd src && ruby console.rb
 
 test:
-	@cd tests && spec --debugger *.rb
+	@cd spec && spec --debugger *.rb

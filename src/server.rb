@@ -40,6 +40,7 @@ class Server < Sinatra::Base
   end
 
   get '/:name' do
+    params['catalogue'] = settings.db.catalogues[params[:name]]
     haml :catalogue_show
   end
 

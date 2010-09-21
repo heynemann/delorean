@@ -2,8 +2,8 @@ require 'messaging'
 
 class Db
   attr_reader :catalogue_loader
-  def initialize
-    @messages_path = '/tmp/db'
+  def initialize(messages_path='/tmp/db')
+    @messages_path = messages_path
     Dir.mkdir(@messages_path) unless File.directory?(@messages_path)
     @message_set = MessageSet.new
     @message_set.load_all(@messages_path)

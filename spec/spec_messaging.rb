@@ -2,6 +2,7 @@ $LOAD_PATH << '../src'
 
 require 'ftools'
 require 'messaging'
+require 'domain'
 
 describe CreateCatalogueMessage do
   before(:each) do
@@ -9,10 +10,11 @@ describe CreateCatalogueMessage do
   end
 
   it "should process the message to include itself to the catalogues list" do
-    message = CreateCatalogueMessage.new "uri"=>"/:new", "name" => "my_catalogue"
+    message = CreateCatalogueMessage.new "uri"=>"/:new", "document" => { "name" => "my_catalogue" }
     message.process @set.catalogues
 
-    @set.catalogues["my_catalogue"].should == { "name"=>"my_catalogue" }
+    @set.catalogues["my_catalogue"].class.should == Catalogue
+    @set.catalogues["my_catalogue"].name.should == "my_catalogue"
   end
 
 end
@@ -53,7 +55,7 @@ describe MessageSet do
 
     File.delete(tmp_file_path) if File.exists? tmp_file_path
 
-    @set.post CreateCatalogueMessage.new("name" => "my_catalogue")
+    @set.post CreateCatalogueMessage.new("document" => { "name" => "my_catalogue" })
     @set.post CreateDocumentMessage.new("uri" => "/my_catalogue/user/:new",
                                         "document" => {"name" => "Bernardo"})
     @set.post DeleteDocumentMessage.new("uri" => "/my_catalogue/user/1")
@@ -72,13 +74,13 @@ describe MessageSet do
   end
 
   it "should post a message and add it to dirty messages" do
-    @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
+    @set.post CreateCatalogueMessage.new "document" => { "name" => "my_catalogue" }
 
     @set.catalogues.keys.should == ["my_catalogue"]
   end
 
   it "should check if the set is dirty" do
-    @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
+    @set.post CreateCatalogueMessage.new "document" => { "name" => "my_catalogue" }
 
     @set.is_dirty?.should == true
   end
@@ -90,7 +92,7 @@ describe MessageSet do
 
     File.delete(tmp_file_path) if File.exists? tmp_file_path
 
-    @set.post CreateCatalogueMessage.new "name" => "my_catalogue"
+    @set.post CreateCatalogueMessage.new "document" => { "name" => "my_catalogue" }
 
     @set.persist! dir, tmp_file
 
