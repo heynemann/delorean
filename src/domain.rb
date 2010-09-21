@@ -8,4 +8,10 @@ class Catalogue
     @name = name
     @documents = []
   end
+
+  def last_message_date
+    return nil if @documents.count == 0
+
+    return @documents.last.timestamp
+  end
 end

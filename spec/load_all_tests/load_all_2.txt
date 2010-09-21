@@ -1,1 +1,1 @@
-{"type":"create", "operation":"document", "uri":"/test/2", "document": {"name":"Bernardo2"}}
+{"timestamp":"Tue Sep 21 11:33:34 -0300 2010", "type":"create", "operation":"document", "uri":"/test/2", "document": {"name":"Bernardo2"}}

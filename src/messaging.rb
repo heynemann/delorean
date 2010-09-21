@@ -3,6 +3,7 @@
 
 require "json"
 require "date"
+require "Time"
 
 require "domain"
 
@@ -99,7 +100,7 @@ class FileSystemLoader < Loader
       raise "Message Type with type #{type} and operation type #{operation} not found!"
     end
 
-    message_type.new(contents)
+    message_type.new(contents, contents["timestamp"])
   end
 
   def persist!(folder, filename, messages)
@@ -115,12 +116,17 @@ end
 
 #Base class for all messages
 class Message
+  attr_reader :timestamp
+  def initialize(timestamp=nil)
+    @timestamp = timestamp or Time.now
+  end
 end
 
 #Base class for URI enabled messages
 class URIOperationMessage < Message
   attr_reader :type, :operation, :uri
-  def initialize(message_type, operation_type, arguments)
+  def initialize(message_type, operation_type, arguments, timestamp=nil)
+    super(timestamp)
     @type = message_type
     @operation = operation_type
     @uri = arguments["uri"]
@@ -130,8 +136,8 @@ end
 #Base class for URI enabled messages that have a message body and operation
 class MessageEnabledURIOperationMessage < URIOperationMessage
   attr_reader :message
-  def initialize(message_type, operation_type, message, arguments)
-    super(message_type, operation_type, arguments)
+  def initialize(message_type, operation_type, message, arguments, timestamp=nil)
+    super(message_type, operation_type, arguments, timestamp)
     @message = message
   end
 end
@@ -139,11 +145,11 @@ end
 #Creates catalogues
 class CreateCatalogueMessage < MessageEnabledURIOperationMessage
   attr_reader :name
-  def initialize(arguments)
+  def initialize(arguments, timestamp=nil)
     @name = arguments["document"]["name"]
     message = { "name" => @name }
     arguments["uri"] = "/#{@name}"
-    super("create", "catalogue", message, arguments)
+    super("create", "catalogue", message, arguments, timestamp)
   end
 
   def process(catalogues)
@@ -152,6 +158,7 @@ class CreateCatalogueMessage < MessageEnabledURIOperationMessage
 
   def to_message
     {
+      "timestamp" => @timestamp,
       "type" => @type,
       "operation" => @operation,
       "uri" => @uri,
@@ -162,8 +169,8 @@ end
 
 #Creates documents
 class CreateDocumentMessage < MessageEnabledURIOperationMessage
-  def initialize(arguments)
-    super("create", "document", arguments["document"], arguments)
+  def initialize(arguments, timestamp=nil)
+    super("create", "document", arguments["document"], arguments, timestamp)
   end
 
   def process(catalogues)
@@ -172,6 +179,7 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
 
   def to_message
     {
+      "timestamp" => @timestamp,
       "type" => @type,
       "operation" => @operation,
       "uri" => @uri,
@@ -182,8 +190,8 @@ end
 
 #Deletes documents
 class DeleteDocumentMessage < URIOperationMessage
-  def initialize(arguments)
-    super("delete", "document", arguments)
+  def initialize(arguments, timestamp=nil)
+    super("delete", "document", arguments, timestamp)
   end
 
   def process(catalogues)
@@ -191,6 +199,7 @@ class DeleteDocumentMessage < URIOperationMessage
   end
   def to_message
     {
+      "timestamp" => @timestamp,
       "type" => @type,
       "operation" => @operation,
       "uri" => @uri

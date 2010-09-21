@@ -33,6 +33,7 @@ describe MessageSet do
 
     @set.messages.count.should == 1
     @set.messages[0].class.should == CreateDocumentMessage
+    @set.messages[0].timestamp.to_s.should == "Tue Sep 21 11:33:34 -0300 2010"
     @set.messages[0].type.should == "create"
     @set.messages[0].uri.should == "/test/:new"
     @set.messages[0].message.should == {"name" => "some random message"}
