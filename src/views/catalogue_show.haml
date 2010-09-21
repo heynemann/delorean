@@ -7,11 +7,16 @@
       Number of documents:
       %span= params["catalogue"].documents.count
     %p.info
-      Last message: 10/10/2010 10:10:10
+      Last message:
+      %span= params["catalogue"].last_message_date.to_s
 %div.grid_8
   %h2.statistics
     Last Documents
   %div.last-documents
+  - if params["catalogue"].documents.count == 0
+    %div.no-documents
+      No documents found!
+  - else
     %pre
       :preserve
         /asdfg @ 10/10/2010 10:10:10
