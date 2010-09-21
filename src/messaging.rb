@@ -100,9 +100,7 @@ class FileSystemLoader < Loader
   end
 
   def persist!(folder, filename, messages)
-    if not filename
-      filename = "messages_for_#{Date.today.to_s}.txt"
-    end
+    filename = "messages_for_#{Date.today.to_s}.txt" unless filename
 
     open(File.join(folder, filename), 'a') { |f|
       messages.each { |message|

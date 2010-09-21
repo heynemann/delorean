@@ -3,3 +3,6 @@ run:
 
 test:
 	@cd spec && spec --debugger *.rb
+
+flog:
+	@find src -name \*.rb | xargs flog -d
