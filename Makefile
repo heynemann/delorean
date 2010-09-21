@@ -6,3 +6,4 @@ test:
 
 flog:
 	@find src -name \*.rb | xargs flog -d
+	@reek src
