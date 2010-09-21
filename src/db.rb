@@ -1,5 +1,6 @@
 require 'messaging'
 
+#class that represents the Database.
 class Db
   attr_reader :catalogue_loader
   def initialize(messages_path='/tmp/db')

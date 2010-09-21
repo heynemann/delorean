@@ -36,6 +36,7 @@ class MessageSet
   end
 end
 
+#Base class for all loaders
 class Loader
   def initialize(message_set)
     @message_set = message_set
@@ -64,12 +65,14 @@ class Loader
 
 end
 
+#Loads the db from the filesystem.
 class FileSystemLoader < Loader
   def load_all(folder, catalogues)
     entries = Dir.new(folder).entries
     entries.sort.each do |entry|
-      path = File.join(folder, entry)
       next if ['.', '..'].include?(entry)
+
+      path = File.join(folder, entry)
       next unless File.exists? path
       load(path, catalogues)
     end
@@ -102,17 +105,19 @@ class FileSystemLoader < Loader
   def persist!(folder, filename, messages)
     filename = "messages_for_#{Date.today.to_s}.txt" unless filename
 
-    open(File.join(folder, filename), 'a') { |f|
+    open(File.join(folder, filename), 'a') { |messages_file|
       messages.each { |message|
-        f.puts message.to_message.to_json
+        messages_file.puts message.to_message.to_json
       }
     }
   end
 end
 
+#Base class for all messages
 class Message
 end
 
+#Base class for URI enabled messages
 class URIOperationMessage < Message
   attr_reader :type, :operation, :uri
   def initialize(message_type, operation_type, arguments)
@@ -122,6 +127,7 @@ class URIOperationMessage < Message
   end
 end
 
+#Base class for URI enabled messages that have a message body and operation
 class MessageEnabledURIOperationMessage < URIOperationMessage
   attr_reader :message
   def initialize(message_type, operation_type, message, arguments)
@@ -130,6 +136,7 @@ class MessageEnabledURIOperationMessage < URIOperationMessage
   end
 end
 
+#Creates catalogues
 class CreateCatalogueMessage < MessageEnabledURIOperationMessage
   attr_reader :name
   def initialize(arguments)
@@ -153,10 +160,10 @@ class CreateCatalogueMessage < MessageEnabledURIOperationMessage
   end
 end
 
+#Creates documents
 class CreateDocumentMessage < MessageEnabledURIOperationMessage
   def initialize(arguments)
-    message = arguments["document"]
-    super("create", "document", message, arguments)
+    super("create", "document", arguments["document"], arguments)
   end
 
   def process(catalogues)
@@ -173,6 +180,7 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
   end
 end
 
+#Deletes documents
 class DeleteDocumentMessage < URIOperationMessage
   def initialize(arguments)
     super("delete", "document", arguments)

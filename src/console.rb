@@ -3,14 +3,15 @@ require "rubygems"
 require "simpleconsole"
 require "sinatra"
 require "server"
-# require File.dirname(__FILE__) + "/../"
 
+#Controller that responds for the console.
 class Controller < SimpleConsole::Controller
   def default
     Server.run!
   end
 end
 
+#View that responds for the console
 class View < SimpleConsole::View
   def default
 
