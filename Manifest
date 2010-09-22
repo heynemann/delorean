@@ -2,7 +2,8 @@ Gemfile
 Makefile
 Manifest
 README
-Rakefile.rb
+Rakefile
+delorean.gemspec
 features
 lib/authorization.rb
 lib/console.rb
@@ -23,4 +24,3 @@ lib/views/layout.haml
 lib/views/style.sass
 spec/load_all_tests/load_all_1.txt
 spec/load_all_tests/load_all_2.txt
-Rakefile
