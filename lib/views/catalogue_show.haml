@@ -1,0 +1,33 @@
+%h1= params["name"]
+%div.grid_4
+  %h2.statistics
+    Statistics
+  %div.statistics
+    %p.info
+      Number of documents:
+      %span= params["catalogue"].documents.count
+    %p.info
+      Last message:
+      %span= params["catalogue"].last_message_date.to_s
+%div.grid_8
+  %h2.statistics
+    Last Documents
+  %div.last-documents
+  - if params["catalogue"].documents.count == 0
+    %div.no-documents
+      No documents found!
+  - else
+    - params["catalogue"].documents.each do |document|
+      %h4= document.uri + " @ " + document.timestamp.to_s
+      %pre
+        %preserve
+          = document.body.to_json.to_s
+
+  %h2.new-document
+    New Document
+  %form.new-document{:action=>"/#{params['name']}/new", :method=>"POST"}
+    %fieldset
+      %label.new-document{:for => "message"} JSON:
+      %textarea.new-document{:type => "text", :name => "message", :class => "text"}
+    .enviar
+      %input{:type => "submit", :value => "Send", :class => "button"}
