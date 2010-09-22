@@ -25,4 +25,3 @@ class View < SimpleConsole::View
   end
 end
 
-SimpleConsole::Application.run(ARGV, Controller, View)
