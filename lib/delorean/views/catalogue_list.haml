@@ -1,9 +1,0 @@
-%h1.catalogues
-  Catalogues
-
-- for catalogue in params["catalogues"].values
-  %h2
-    %a.catalogue{:href=>"/#{catalogue.name}"}= catalogue.name
-
-%div.grid_12
-  %a.operation{:href=>'/catalogues/new'} Add new catalogue
