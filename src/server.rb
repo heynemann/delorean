@@ -2,7 +2,10 @@
 #!/usr/bin/env ruby
 
 require 'sinatra/base'
+require 'haml'
+require 'sass'
 
+require 'authorization'
 require 'db'
 
 class Server < Sinatra::Base
@@ -11,8 +14,27 @@ class Server < Sinatra::Base
   set :views, File.dirname(__FILE__) + '/views'
   set :db, Db.new
 
+  helpers do
+    include Sinatra::Authorization
+  end
+
+  def self.set_credentials(username, password)
+    set :username, username
+    set :password, password
+  end
+
+  def do_auth
+    require_administrative_privileges(settings.username, settings.password)
+  end
+
   before do
     content_type 'text/html', :charset => 'utf-8'
+    do_auth
+  end
+
+  get '/logout' do
+    logout
+    redirect '/'
   end
 
   get '/about' do
@@ -30,8 +52,17 @@ class Server < Sinatra::Base
 
   post '/catalogues/create' do
     name = params[:name]
-    settings.db.create_catalogue(name)
-    redirect '/catalogues'
+    source = params[:source]
+    if not name
+      halt 500, "You can't create a catalogue without a name."
+    end
+    catalogue = settings.db.create_catalogue(name)
+
+    if source == 'database'
+      redirect '/catalogues'
+    end
+
+    catalogue.to_dict.to_json
   end
 
   get '/stylesheets/style.css' do
@@ -50,6 +81,10 @@ class Server < Sinatra::Base
   get '/:name' do
     params['catalogue'] = settings.db.catalogues[params[:name]]
     haml :catalogue_show
+  end
+
+  get '/' do
+    redirect '/about'
   end
 
 end

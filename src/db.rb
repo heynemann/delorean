@@ -23,6 +23,7 @@ class Db
     message = CreateCatalogueMessage.new "document" => {"name" => name}
     @message_set.post message
     persist!
+    @message_set.catalogues[name]
   end
 
   def create_message(catalogue, message)

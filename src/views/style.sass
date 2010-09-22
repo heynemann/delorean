@@ -7,10 +7,10 @@ $verylightgreen: #e8ffdd
 $white: #FFFFFF
 $darkgray: #666666
 
-=border-radius(!radius)
-  border-radius = !radius
-  -moz-border-radius = !radius
-  -webkit-border-radius = !radius
+=border-radius($radius)
+  border-radius: $radius
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
 
 body
   :background url('/img/background-top.png') repeat-x scroll 0 0
@@ -37,7 +37,7 @@ h3
   :font
     :size 1.16667em
 
-#menu
+div.menu
   :margin
     :top 10px
 

@@ -8,6 +8,7 @@
 
 .form
   %form{:action=>'create', :method=>'post'}
+    %input#source{:type=>'hidden', :name=>'source', :value=>'database'}
     .name-field
       %label{:for=>'name'}
         Name

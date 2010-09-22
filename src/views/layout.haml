@@ -2,8 +2,8 @@
 
 %head
   %title Delorean Database
-  %link{:rel=>'stylesheet', :href=>'/css/grid.css', :type => "text/css"}       
-  %link{:rel=>'stylesheet', :href=>'/stylesheets/style.css', :type => "text/css"}       
+  %link{:rel=>'stylesheet', :href=>'/css/grid.css', :type => "text/css"}
+  %link{:rel=>'stylesheet', :href=>'/stylesheets/style.css', :type => "text/css"}
 %body
   #wrap
     .grid_1#left
@@ -12,9 +12,11 @@
       .grid_12#header
         %a.logo{:href=>'http://github.com/heynemann/delorean'}
           %img.logo{:src=>'/img/delorean-logo-sm.png', :border=>0}
-      .grid_12#menu
+      .grid_11.menu
         %a.menu-item{:href=>'/catalogues'} Catalogues
         %a.menu-item{:href=>'/about'} About Delorean
+      .grid_1.menu
+        %a.menu-item{:href=>'/logout'} Logout
       .grid_12#main
         = yield
       .grid_12#footer

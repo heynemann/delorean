@@ -14,6 +14,14 @@ class Catalogue
 
     return @documents.last.timestamp
   end
+
+  def to_dict
+    {
+      'name' => @name,
+      'documentCount' => @documents.count,
+      'lastMessageDate' => last_message_date
+    }
+  end
 end
 
 class Document
