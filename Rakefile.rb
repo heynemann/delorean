@@ -2,11 +2,11 @@ require 'rubygems'
 require 'rake'
 require 'echoe'
 
-Echoe.new('helloworld', '0.0.1') do |p|
-  p.description    = "A gem that illustrates how to build a gem"
-  p.url            = "http://github.com/tombombadil/hello_world"
-  p.author         = "Chris Young"
-  p.email          = "beesucker @nospam@ gmail.com"
-  p.ignore_pattern = ["tmp/*", "script/*"]
+Echoe.new('delorean', '0.1.0') do |p|
+  p.description    = "delorean is a message-driven document database from the future"
+  p.url            = "http://github.com/heynemann/delorean"
+  p.author         = "Bernardo Heynemann"
+  p.email          = "heynemann @nospam@ gmail.com"
+  p.ignore_pattern = ["spec/*", "script/*"]
   p.development_dependencies = []
 end
