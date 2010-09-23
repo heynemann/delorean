@@ -91,6 +91,20 @@ class Server < Sinatra::Base
     message.to_dict.to_json
   end
 
+  get '/:name/documents' do
+    if not settings.db.catalogues.has_key? params[:name]
+      halt 404, "Catalogue with name #{params[:name]} not found!"
+    end
+
+    json_documents = []
+
+    settings.db.catalogues[params[:name]].documents.each do |document|
+      json_documents << document.to_dict
+    end
+
+    json_documents.to_json
+  end
+
   get '/:name/:document_id' do
     content_type 'application/json', :charset => 'utf-8'
     if not settings.db.catalogues.has_key? params[:name]
