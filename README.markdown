@@ -23,9 +23,9 @@ TBW
 Database clients
 ================
 
-I'll try to get smart people to help me doing clients for the database in several different languages. For now we feature::
+I'll try to get smart people to help me doing clients for the database in several different languages. For now we feature:
 
-    Mcfly - Python - [http://github.com/heynemann/mcfly](http://github.com/heynemann/mcfly "Mcfly library")
+* Python - [Mcfly](http://github.com/heynemann/mcfly)
 
 Roadmap
 =======
