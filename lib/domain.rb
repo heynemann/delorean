@@ -2,17 +2,18 @@
 #!/usr/bin/env ruby
 
 class Catalogue
-  attr_reader :name, :documents
+  attr_reader :name, :documents, :documents_by_id
 
   def initialize(name)
     @name = name
-    @documents = {}
+    @documents = []
+    @documents_by_id = {}
   end
 
   def last_message_date
     return nil if @documents.count == 0
 
-    return @documents.values.last.timestamp
+    return @documents.last.timestamp
   end
 
   def to_dict

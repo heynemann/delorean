@@ -124,7 +124,7 @@ end
 class Message
   attr_reader :timestamp
   def initialize(timestamp=nil)
-    @timestamp ||= Time.now
+    @timestamp = timestamp || Time.now
   end
 end
 
@@ -181,6 +181,11 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
   def initialize(arguments, timestamp=nil)
     @catalogue_name = arguments["catalogue_name"]
     @id = arguments["id"]
+
+    if arguments.has_key? "timestamp"
+      timestamp = Time.parse arguments["timestamp"]
+    end
+
     super("create", "document", arguments["document"], arguments, timestamp)
   end
 
@@ -190,7 +195,8 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
       raise "Catalogue with name #{@catalogue_name} not found!"
     end
     document = Document.new(@uri, @id, @timestamp, @message)
-    catalogue.documents[@id] = document
+    catalogue.documents << document
+    catalogue.documents_by_id[@id] = document
 
     document
   end
@@ -202,6 +208,7 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
       "type" => @type,
       "operation" => @operation,
       "uri" => @uri,
+      "id" => @id,
       "document" => @message
     }
   end

@@ -74,6 +74,9 @@ class Server < Sinatra::Base
   end
 
   post '/:name/new' do
+    if not settings.db.catalogues.has_key? params[:name]
+      halt 404, "Catalogue with name #{params[:name]} not found!"
+    end
     catalogue = settings.db.catalogues[params[:name]]
     source = params[:source]
 
@@ -87,13 +90,27 @@ class Server < Sinatra::Base
     message.to_dict.to_json
   end
 
+  post '/:name/:document_id' do
+    content_type 'application/json', :charset => 'utf-8'
+    if not settings.db.catalogues.has_key? params[:name]
+      halt 404, "Catalogue with name #{params[:name]} not found!"
+    end
+    catalogue = settings.db.catalogues[params[:name]]
+
+    if catalogue.documents_by_id.has_key? params[:document_id]
+      halt 404, "Document with id #{params[:document_id]} in catalogue #{params[:name]} not found!"
+    end
+    document = catalogue.documents_by_id[params[:document_id]]
+    document.to_dict.to_json
+  end
+
   get '/:name' do
     if not settings.db.catalogues.has_key? params[:name]
       halt 404, "Catalogue with name #{params[:name]} not found!"
-    else
-      params['catalogue'] = settings.db.catalogues[params[:name]]
-      haml :catalogue_show
     end
+
+    params['catalogue'] = settings.db.catalogues[params[:name]]
+    haml :catalogue_show
   end
 
   get '/' do
