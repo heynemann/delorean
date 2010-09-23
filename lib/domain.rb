@@ -25,10 +25,20 @@ class Catalogue
 end
 
 class Document
-  attr_reader :uri, :timestamp, :body
-  def initialize(uri, timestamp, body)
+  attr_reader :uri, :id, :timestamp, :body
+  def initialize(uri, id, timestamp, body)
     @uri = uri
+    @id = id
     @timestamp = timestamp
     @body = body
+  end
+
+  def to_dict
+    {
+      'uri' => @uri,
+      'id' => @id,
+      'timestamp' => @timestamp,
+      'body' => @body
+    }
   end
 end

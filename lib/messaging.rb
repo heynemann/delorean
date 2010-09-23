@@ -25,8 +25,10 @@ class MessageSet
     @loader.load_all(folder, @catalogues)
   end
   def post(message)
-    message.process @catalogues
+    return_value = message.process @catalogues
     @dirty_messages << message
+
+    return_value
   end
   def persist!(folder, filename=nil)
     @loader.persist! folder, filename, @dirty_messages
@@ -158,6 +160,7 @@ class CreateCatalogueMessage < MessageEnabledURIOperationMessage
 
   def process(catalogues)
     catalogues[@name] = Catalogue.new @name
+    catalogues[@name]
   end
 
   def to_message
@@ -173,8 +176,11 @@ end
 
 #Creates documents
 class CreateDocumentMessage < MessageEnabledURIOperationMessage
+  attr_reader :id
+
   def initialize(arguments, timestamp=nil)
     @catalogue_name = arguments["catalogue_name"]
+    @id = arguments["id"]
     super("create", "document", arguments["document"], arguments, timestamp)
   end
 
@@ -183,8 +189,10 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
     if not catalogue
       raise "Catalogue with name #{@catalogue_name} not found!"
     end
-    document = Document.new(@uri, @timestamp, @message)
+    document = Document.new(@uri, @id, @timestamp, @message)
     catalogue.documents << document
+
+    document
   end
 
   def to_message

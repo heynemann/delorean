@@ -1,5 +1,7 @@
-require 'messaging'
 require 'Time'
+
+require 'messaging'
+require 'uuid'
 
 #class that represents the Database.
 class Db
@@ -20,22 +22,29 @@ class Db
   end
 
   def create_catalogue(name)
-    message = CreateCatalogueMessage.new "document" => {"name" => name}
-    @message_set.post message
-    persist!
-    @message_set.catalogues[name]
+    if @message_set.catalogues.has_key? name
+      return @message_set.catalogues[name]
+    else
+      message = CreateCatalogueMessage.new "document" => {"name" => name}
+      return_value = @message_set.post message
+      persist!
+      return_value
+    end
   end
 
   def create_message(catalogue, message)
-    document_index = catalogue.documents.count
-    uri = "/#{catalogue.name}/#{document_index}"
-    arguments = { "document" => message,
+    document_id = UUID.create
+    uri = "/#{catalogue.name}/#{document_id}"
+    arguments = {
+                  "document" => message,
                   "catalogue_name" => catalogue.name,
-                  "uri" => uri
+                  "uri" => uri,
+                  "id" => document_id
                 }
     message = CreateDocumentMessage.new arguments, Time.now
-    @message_set.post message
+    return_value = @message_set.post message
     persist!
+    return_value
   end
 end
 

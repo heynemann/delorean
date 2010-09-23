@@ -1,5 +1,5 @@
 run:
-	@cd src && ruby console.rb -u admin -p 12345
+	@cd lib && ruby delorean.rb -u admin -p 12345
 
 test:
 	@cd spec && spec --debugger *.rb

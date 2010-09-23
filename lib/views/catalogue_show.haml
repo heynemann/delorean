@@ -26,6 +26,7 @@
   %h2.new-document
     New Document
   %form.new-document{:action=>"/#{params['name']}/new", :method=>"POST"}
+    %input#source{:type=>'hidden', :name=>'source', :value=>'database'}
     %fieldset
       %label.new-document{:for => "message"} JSON:
       %textarea.new-document{:type => "text", :name => "message", :class => "text"}

@@ -55,11 +55,6 @@ class Server < Sinatra::Base
 
   post '/catalogues/create' do
     name = params[:name]
-
-    if settings.db.catalogue.has_key? name
-      return settings.db.catalogue[name].to_dict.to_json
-    end
-
     source = params[:source]
     if not name
       halt 500, "You can't create a catalogue without a name."
@@ -80,10 +75,16 @@ class Server < Sinatra::Base
 
   post '/:name/new' do
     catalogue = settings.db.catalogues[params[:name]]
+    source = params[:source]
 
-    message = JSON.parse params[:message]
-    settings.db.create_message(catalogue, message)
-    redirect "/#{params[:name]}"
+    message_body = JSON.parse params[:message]
+    message = settings.db.create_message(catalogue, message_body)
+
+    if source == 'database'
+      redirect "/#{params[:name]}"
+    end
+
+    message.to_dict.to_json
   end
 
   get '/:name' do

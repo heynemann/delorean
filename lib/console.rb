@@ -14,7 +14,7 @@ class Controller < SimpleConsole::Controller
       Process.exit! 1
     end
 
-    dir = params[:dir] or "/tmp/db"
+    dir = params[:dir] || "/tmp/db"
 
     Server.set_credentials(params[:username], params[:password])
     Server.set_folder(dir)
