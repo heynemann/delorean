@@ -59,7 +59,8 @@ class Server < Sinatra::Base
     if not name
       halt 500, "You can't create a catalogue without a name."
     end
-    catalogue = settings.db.create_catalogue(name)
+
+    catalogue = settings.db.get_or_create_catalogue(name)
 
     if source == 'database'
       redirect '/catalogues'

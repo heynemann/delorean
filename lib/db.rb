@@ -21,7 +21,7 @@ class Db
     @message_set.persist! @messages_path
   end
 
-  def create_catalogue(name)
+  def get_or_create_catalogue(name)
     if @message_set.catalogues.has_key? name
       return @message_set.catalogues[name]
     else
