@@ -88,8 +88,12 @@ class Server < Sinatra::Base
   end
 
   get '/:name' do
-    params['catalogue'] = settings.db.catalogues[params[:name]]
-    haml :catalogue_show
+    if not settings.db.catalogues.has_key? params[:name]
+      halt 404, "Catalogue with name #{params[:name]} not found!"
+    else
+      params['catalogue'] = settings.db.catalogues[params[:name]]
+      haml :catalogue_show
+    end
   end
 
   get '/' do

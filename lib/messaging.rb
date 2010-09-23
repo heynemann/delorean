@@ -190,7 +190,7 @@ class CreateDocumentMessage < MessageEnabledURIOperationMessage
       raise "Catalogue with name #{@catalogue_name} not found!"
     end
     document = Document.new(@uri, @id, @timestamp, @message)
-    catalogue.documents << document
+    catalogue.documents[@id] = document
 
     document
   end

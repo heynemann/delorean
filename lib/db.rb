@@ -33,7 +33,10 @@ class Db
   end
 
   def create_message(catalogue, message)
-    document_id = UUID.create
+    document_id = UUID.create.to_s.slice(0..7)
+    while catalogue.documents.has_key? document_id
+      document_id = UUID.create.to_s.slice(0..7)
+    end
     uri = "/#{catalogue.name}/#{document_id}"
     arguments = {
                   "document" => message,

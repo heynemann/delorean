@@ -6,13 +6,13 @@ class Catalogue
 
   def initialize(name)
     @name = name
-    @documents = []
+    @documents = {}
   end
 
   def last_message_date
     return nil if @documents.count == 0
 
-    return @documents.last.timestamp
+    return @documents.values.last.timestamp
   end
 
   def to_dict

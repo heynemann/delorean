@@ -17,7 +17,7 @@
     %div.no-documents
       No documents found!
   - else
-    - params["catalogue"].documents.each do |document|
+    - params["catalogue"].documents.values.each do |document|
       %h4= document.uri + " @ " + document.timestamp.to_s
       %pre
         %preserve
