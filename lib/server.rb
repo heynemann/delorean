@@ -90,15 +90,15 @@ class Server < Sinatra::Base
     message.to_dict.to_json
   end
 
-  post '/:name/:document_id' do
+  get '/:name/:document_id' do
     content_type 'application/json', :charset => 'utf-8'
     if not settings.db.catalogues.has_key? params[:name]
-      halt 404, "Catalogue with name #{params[:name]} not found!"
+      halt 404, {:error => "Catalogue with name #{params[:name]} not found!"}.to_json
     end
     catalogue = settings.db.catalogues[params[:name]]
 
-    if catalogue.documents_by_id.has_key? params[:document_id]
-      halt 404, "Document with id #{params[:document_id]} in catalogue #{params[:name]} not found!"
+    if not catalogue.documents_by_id.has_key? params[:document_id]
+      halt 404, {:error => "Document with id #{params[:document_id]} in catalogue #{params[:name]} not found!"}.to_json
     end
     document = catalogue.documents_by_id[params[:document_id]]
     document.to_dict.to_json

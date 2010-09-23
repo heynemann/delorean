@@ -18,7 +18,9 @@
       No documents found!
   - else
     - params["catalogue"].documents.reverse!.each do |document|
-      %h4= document.uri + " @ " + document.timestamp.to_s
+      %h4
+        %a.document{:href => document.uri}= document.uri
+        %span=  " @ " + document.timestamp.to_s
       %pre
         %preserve
           = document.body.to_json.to_s
