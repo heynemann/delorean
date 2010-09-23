@@ -12,7 +12,6 @@ class Server < Sinatra::Base
   set :sessions, true
   set :public, File.dirname(__FILE__) + '/public'
   set :views, File.dirname(__FILE__) + '/views'
-  set :db, Db.new
 
   helpers do
     include Sinatra::Authorization
@@ -21,6 +20,10 @@ class Server < Sinatra::Base
   def self.set_credentials(username, password)
     set :username, username
     set :password, password
+  end
+
+  def self.set_folder(dir)
+    set :db, Db.new(dir)
   end
 
   def do_auth
@@ -52,6 +55,11 @@ class Server < Sinatra::Base
 
   post '/catalogues/create' do
     name = params[:name]
+
+    if settings.db.catalogue.has_key? name
+      return settings.db.catalogue[name].to_dict.to_json
+    end
+
     source = params[:source]
     if not name
       halt 500, "You can't create a catalogue without a name."
