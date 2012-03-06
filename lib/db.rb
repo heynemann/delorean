@@ -1,7 +1,7 @@
 require 'Time'
 
-require 'messaging'
-require 'uuid'
+require_relative 'uuid'
+require_relative 'messaging'
 
 #class that represents the Database.
 class Db

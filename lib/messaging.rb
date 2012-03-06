@@ -5,7 +5,7 @@ require "json"
 require "date"
 require "Time"
 
-require "domain"
+require_relative "domain"
 
 class MessageSet
   attr_reader :messages, :catalogues, :dirty_messages

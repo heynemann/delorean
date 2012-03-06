@@ -5,8 +5,8 @@ require 'sinatra/base'
 require 'haml'
 require 'sass'
 
-require 'authorization'
-require 'db'
+require_relative 'authorization'
+require_relative 'db'
 
 class Server < Sinatra::Base
   set :sessions, true

@@ -2,7 +2,7 @@
 require "rubygems"
 require "simpleconsole"
 
-require "server"
+require_relative "server"
 
 #Controller that responds for the console.
 class Controller < SimpleConsole::Controller
